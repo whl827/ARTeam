@@ -2,10 +2,12 @@ Text Recognition
 
 This is a simple android app that enables the phone to recognize any English letters or numbers through its camera
 
+
 Installing
 
 Install Android Studio
-Download and unnzip the folder
+Download the project
+
 
 Running the tests
 
