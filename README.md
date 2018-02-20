@@ -1,6 +1,6 @@
 This is a project folder for PG&E AR Team
 
-Developer Team (Students)
+Developer Team
 
 Edward Han,
 Enoch Hang,
