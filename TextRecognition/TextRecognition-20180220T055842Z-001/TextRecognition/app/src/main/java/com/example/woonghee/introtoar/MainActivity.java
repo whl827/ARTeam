@@ -10,7 +10,10 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     CameraSource cameraSource;
     final int RequestCameraPermissionID = 1001;
+    Button submitButton;
 
 
     @Override
@@ -57,6 +61,18 @@ public class MainActivity extends AppCompatActivity {
 
         cameraView = findViewById(R.id.surface_view);
         textView = findViewById(R.id.text_view);
+
+        submitButton = findViewById(R.id.submit_button);
+
+        //Press button to submit identifer for query
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(!textView.getText().equals(""))
+                    Toast.makeText(MainActivity.this, "Successfully submitted " + textView.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         if (!textRecognizer.isOperational()) {
@@ -126,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                                 textView.setText(stringBuilder.toString());
+
                             }
                         });
                     }
