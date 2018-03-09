@@ -1,0 +1,4 @@
+#Thu Mar 08 17:13:47 PST 2018
+base.0=C\:\\Users\\WoongHee\\Desktop\\TextRecognition\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\8
+path.0=classes.dex
+renamed.0=classes.dex
