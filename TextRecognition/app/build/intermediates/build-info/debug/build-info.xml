@@ -3,11 +3,11 @@
     abi="arm64-v8a,armeabi-v7a,armeabi"
     api-level="24"
     build-mode="COLD"
-    density="420dpi"
+    density="xxxhdpi"
     format="10"
     plugin-version="3.0.1"
-    timestamp="1520558107292"
-    token="-1747258205582094865"
+    timestamp="1521499863791"
+    token="6547415306078757654"
     verifier="COLD_SWAP_REQUESTED" >
 
     <task
@@ -23,50 +23,67 @@
         name="verifier"
         duration="0" />
 
+    <artifact
+        location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\outputs\apk\debug\app-debug.apk"
+        type="SPLIT_MAIN" />
+
     <build
         build-mode="FULL"
-        timestamp="1520558076677"
+        timestamp="1521497890534"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_8.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_7.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_7.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_1.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_8.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\WoongHee\Desktop\TextRecognition\app\build\outputs\apk\debug\app-debug.apk"
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\outputs\apk\debug\app-debug.apk"
             type="SPLIT_MAIN" />
     </build>
     <build
         build-mode="COLD"
-        timestamp="1520558107292"
-        verifier="COLD_SWAP_REQUESTED" />
+        ir-eligibility="COMPATIBLE"
+        timestamp="1521499682329"
+        verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+            type="SPLIT" />
+    </build>
+    <build
+        build-mode="COLD"
+        timestamp="1521499863791"
+        verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="C:\Users\WoongHee\Documents\GitHub\ARTeam\TextRecognition\app\build\outputs\apk\debug\app-debug.apk"
+            type="SPLIT_MAIN" />
+    </build>
 
 </instant-run>

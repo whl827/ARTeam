@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!textView.getText().equals(""))
                 {
-                    Toast.makeText(MainActivity.this, "Submitted" + textView.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Submitted\n" + textView.getText(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
