@@ -351,12 +351,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         if (anchors.size() >= 20) {
                             anchors.get(0).detach();
                             anchors.remove(0);
+                            allObjectModes.remove(0);
                         }
                         // Adding an Anchor tells ARCore that it should track this position in
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
                         anchors.add(hit.createAnchor());
                         allObjectModes.add(mode);
+
 
                         break;
                     }
