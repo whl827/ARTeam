@@ -16,11 +16,21 @@
 
 package com.google.ar.core.examples.java.helloar;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -28,6 +38,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -104,6 +115,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private int mode = 0;
 
     private Button button;
+    private TextView locationText;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +167,58 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 changeObjects();
             }
         });
+
+        locationText = findViewById(R.id.locationText);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                double altitude = location.getAltitude();
+                String msg = "Latitude: " + latitude + "\n" +
+                             "Longitude: " + longitude + "\n" +
+                             "!!!Altitude: " + altitude;
+                locationText.setText(msg);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider)
+            {
+
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]
+                    {
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.INTERNET
+                    }, 10);
+           // locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
+
+            return;
+        }
+        locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
+
+//        Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+//        onLocationChange(location);
+
     }
 
     @Override
@@ -238,6 +304,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 CameraPermissionHelper.launchPermissionSettings(this);
             }
             finish();
+        }
+        switch (requestCode)
+        {
+            case 10:
+                if(results.length>0 && results[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
+                }
         }
     }
 
