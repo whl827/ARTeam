@@ -51,6 +51,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.Point;
 import com.google.ar.core.Point.OrientationMode;
 import com.google.ar.core.PointCloud;
+import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
@@ -70,6 +71,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import java.lang.Object;
 
 /**
  * This is a simple example that shows how to create an augmented reality (AR) application using the
@@ -118,6 +121,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private TextView locationText;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,13 +179,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
                 double altitude = location.getAltitude();
                 String msg = "Latitude: " + latitude + "\n" +
                              "Longitude: " + longitude + "\n" +
                              "!!!Altitude: " + altitude;
-                locationText.setText(msg);
+                //locationText.setText(msg);
+
             }
 
             @Override
@@ -218,6 +224,28 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
 //        Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
 //        onLocationChange(location);
+
+        // *****
+        //Object Latitude: 34.021470873883615
+        //Object Longitude: -118.2889746941894
+        //session = new Session(this);
+//        Frame frame = session.update();
+//
+//        double radius = 6378137;
+//
+//        double latDif = 34.021470873883615 - latitude;
+//        double lonDif = -118.2889746941894 - longitude;
+//
+//        double latDifRad = latDif * Math.PI/180;
+//        double lonDifRad = lonDif * Math.PI/180;
+//
+//        // offsets
+//        double offN = latDifRad * radius;
+//        double offE = lonDifRad * radius * Math.cos(Math.PI * latitude);
+//
+//        Anchor sessionAnchor = session.createAnchor(frame.getCamera().getPose().compose(Pose.makeTranslation((float)offN, 0, (float)offE).extractTranslation()));
+//
+//        Log.d(TAG, "RESULT: " + sessionAnchor.getPose().toString());
 
     }
 
@@ -310,7 +338,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             case 10:
                 if(results.length>0 && results[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
+//                    locationManager.requestLocationUpdates("gps", 1000, 0, locationListener);
                 }
         }
     }
@@ -406,6 +434,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             Frame frame = session.update();
             Camera camera = frame.getCamera();
 
+
+
+
+
             // Handle taps. Handling only one tap per frame, as taps are usually low frequency
             // compared to frame rate.
 
@@ -431,6 +463,59 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
                         anchors.add(hit.createAnchor());
+                        Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
+
+
+
+
+                        // ***** GETTING THE LATITUDE/LONGITUDE OF AN OBJECT PLACED ON THE AR PLANE *****
+
+                        double radius = 6378137;
+                        // calculate offset
+                        double dn = anchors.get(anchors.size()-1).getPose().tx();
+                        double de = anchors.get(anchors.size()-1).getPose().tz();
+//                        double dn = 100;
+//                        double de = 100;
+
+                        // Coordinate offsets in radians
+                        double dLat = dn/radius;
+                        double dLon = de/(radius*Math.cos(Math.PI*latitude/180));
+
+                        // Offset Position, decimal degrees
+                        double lat0 = latitude + dLat * 180/Math.PI;
+                        double lon0 = longitude + dLon * 180/Math.PI;
+
+                        Log.d(TAG, "ANCHOR HIT POSE: Lat: " + lat0 + " Lon: " + lon0);
+//                        locationText.setText("Lat: " + lat0 + "\nLon: " + lon0);
+
+                        Location loc1 = new Location("");
+                        loc1.setLatitude(latitude);
+                        loc1.setLongitude(longitude);
+
+                        Location loc2 = new Location("");
+                        loc2.setLatitude(lat0);
+                        loc2.setLongitude(lon0);
+
+                        float distanceInMeters = loc1.distanceTo(loc2);
+                        //Log.d(TAG, "Distance: " + distanceInMeters);
+                        //Log.d(TAG, "Altitude of object: " + loc2.getAltitude());
+
+                        String msg = "Object Latitude: " + lat0 + "\nObject Longitude: " + lon0 + "\n\nDevice Latitude: " + latitude + "\nDevice Longitude: " + longitude;
+                        msg += "\nDistance from Device to Object: " + distanceInMeters + " meters";
+
+
+
+                        //Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_LONG).show();
+                        //locationText.setText(msg);\
+
+
+                        Log.d(TAG, "RESULT: \n" + msg);
+
+
+
+
+
+
                         allObjectModes.add(mode);
 
 

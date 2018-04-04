@@ -1,0 +1,146 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:17:1-40:12
+MERGED from [com.android.support:design:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\design-27.0.2.aar\43012fc666708a6b357f2386ea73f939\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.2.aar\d95cd891bc2bae05cf9395db88baa109\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.2.aar\f11ec04a977307e961dc4ae96dfe347d\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-fragment-27.0.2.aar\daa72fed05bc3550983b43334a49d44b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.0.2.aar\d26d7531d5eef00b1f294f8f6ef3bad0\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.2.aar\545f807e53fd1c955f3b0c5e864c9746\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.2.aar\15b82c998e21bca5b81dc7bd466314ab\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:recyclerview-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.2.aar\9a79c7025f62f6989a8f163f104b47bb\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:transition:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\transition-27.0.2.aar\1baf99b3e66874ea2c95febd45885133\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.2.aar\3405759cb56e1246b36c506dff511d5b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.2.aar\f77c5e8c3294c1ed423ff005f14c8b86\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-compat-27.0.2.aar\b5b08f82ba943b72d3a219d2096e8ced\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.0.3] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\runtime-1.0.3.aar\e71ce72f20f2748f9d615cec27e91b55\AndroidManifest.xml:17:1-24:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+	package
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:19:5-55
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:18:11-57
+	android:versionCode
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:1-44:12
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:17:11-69
+uses-permission#android.permission.CAMERA
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:21:5-65
+	android:name
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:21:22-62
+application
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:23:5-43:19
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:28:5-38:19
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:28:5-38:19
+	android:label
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:26:9-41
+	tools:ignore
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:29:9-48
+	android:icon
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:25:9-45
+	android:allowBackup
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:24:9-36
+	android:theme
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:27:9-40
+	android:usesCleartextTraffic
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:28:9-45
+activity#com.google.ar.core.examples.java.helloar.HelloArActivity
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:31:9-42:20
+	android:screenOrientation
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:37:13-47
+	android:label
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:33:13-45
+	android:exported
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:35:13-36
+	android:configChanges
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:34:13-59
+	android:theme
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:36:13-63
+	android:name
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:32:13-44
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:38:13-41:29
+action#android.intent.action.MAIN
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:39:17-69
+	android:name
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:39:25-66
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:40:17-77
+	android:name
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml:40:27-74
+uses-sdk
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:25:5-44
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:25:5-44
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:26:5-47
+MERGED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:26:5-47
+MERGED from [com.android.support:design:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\design-27.0.2.aar\43012fc666708a6b357f2386ea73f939\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:design:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\design-27.0.2.aar\43012fc666708a6b357f2386ea73f939\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.2.aar\d95cd891bc2bae05cf9395db88baa109\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.0.2.aar\d95cd891bc2bae05cf9395db88baa109\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.2.aar\f11ec04a977307e961dc4ae96dfe347d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-v4-27.0.2.aar\f11ec04a977307e961dc4ae96dfe347d\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-fragment-27.0.2.aar\daa72fed05bc3550983b43334a49d44b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-fragment-27.0.2.aar\daa72fed05bc3550983b43334a49d44b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.0.2.aar\d26d7531d5eef00b1f294f8f6ef3bad0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.0.2.aar\d26d7531d5eef00b1f294f8f6ef3bad0\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.2.aar\545f807e53fd1c955f3b0c5e864c9746\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.0.2.aar\545f807e53fd1c955f3b0c5e864c9746\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.2.aar\15b82c998e21bca5b81dc7bd466314ab\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.0.2.aar\15b82c998e21bca5b81dc7bd466314ab\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.2.aar\9a79c7025f62f6989a8f163f104b47bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:recyclerview-v7:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\recyclerview-v7-27.0.2.aar\9a79c7025f62f6989a8f163f104b47bb\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\transition-27.0.2.aar\1baf99b3e66874ea2c95febd45885133\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:transition:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\transition-27.0.2.aar\1baf99b3e66874ea2c95febd45885133\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.2.aar\3405759cb56e1246b36c506dff511d5b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.0.2.aar\3405759cb56e1246b36c506dff511d5b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.2.aar\f77c5e8c3294c1ed423ff005f14c8b86\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.0.2.aar\f77c5e8c3294c1ed423ff005f14c8b86\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-compat-27.0.2.aar\b5b08f82ba943b72d3a219d2096e8ced\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.0.2] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\support-compat-27.0.2.aar\b5b08f82ba943b72d3a219d2096e8ced\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.0.3] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\runtime-1.0.3.aar\e71ce72f20f2748f9d615cec27e91b55\AndroidManifest.xml:20:5-22:41
+MERGED from [android.arch.lifecycle:runtime:1.0.3] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\runtime-1.0.3.aar\e71ce72f20f2748f9d615cec27e91b55\AndroidManifest.xml:20:5-22:41
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		MERGED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Edward\Documents\USC Spring 2018 Senior Year\CSCI 401\Team34\ARTeam\ArCoreGIS\ARCoreAndroidBasic\hello_ar_java\app\src\main\AndroidManifest.xml
+meta-data#com.google.ar.version.major
+ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:29:9-31:33
+	android:value
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:31:13-30
+	android:name
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:30:13-55
+meta-data#com.google.ar.version.minor
+ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:32:9-34:34
+	android:value
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:34:13-31
+	android:name
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:33:13-55
+meta-data#com.google.ar.version.patch
+ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:35:9-37:41
+	android:value
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:37:13-38
+	android:name
+		ADDED from [com.google.ar:core:0.91.0] C:\Users\Edward\.gradle\caches\transforms-1\files-1.1\core-0.91.0.aar\55d4257f10bec0b6fe2fb059a33c5bcf\AndroidManifest.xml:36:13-55

@@ -1,0 +1,4 @@
+#Sat Mar 24 16:48:11 PDT 2018
+base.0=C\:\\Users\\Edward\\Documents\\USC Spring 2018 Senior Year\\CSCI 401\\Team34\\ARTeam\\ArCoreGIS\\ARCoreAndroidBasic\\hello_ar_java\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex
