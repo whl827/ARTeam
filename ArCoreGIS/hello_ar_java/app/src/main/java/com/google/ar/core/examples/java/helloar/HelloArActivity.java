@@ -123,6 +123,10 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private LocationListener locationListener;
     private double latitude;
     private double longitude;
+    private boolean anchorCreated;
+
+    // added on 4/4/18
+    private final Pose mCameraRelativePose = Pose.makeTranslation(0.01f, -0.01f, -0.6f);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +134,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         setContentView(R.layout.activity_main);
         surfaceView = findViewById(R.id.surfaceview);
         displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
+
+        anchorCreated = false;
 
         // Set up tap listener.
         gestureDetector =
@@ -221,32 +227,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             return;
         }
         locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
-
-//        Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
-//        onLocationChange(location);
-
-        // *****
-        //Object Latitude: 34.021470873883615
-        //Object Longitude: -118.2889746941894
-        //session = new Session(this);
-//        Frame frame = session.update();
-//
-//        double radius = 6378137;
-//
-//        double latDif = 34.021470873883615 - latitude;
-//        double lonDif = -118.2889746941894 - longitude;
-//
-//        double latDifRad = latDif * Math.PI/180;
-//        double lonDifRad = lonDif * Math.PI/180;
-//
-//        // offsets
-//        double offN = latDifRad * radius;
-//        double offE = lonDifRad * radius * Math.cos(Math.PI * latitude);
-//
-//        Anchor sessionAnchor = session.createAnchor(frame.getCamera().getPose().compose(Pose.makeTranslation((float)offN, 0, (float)offE).extractTranslation()));
-//
-//        Log.d(TAG, "RESULT: " + sessionAnchor.getPose().toString());
-
     }
 
     @Override
@@ -434,10 +414,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             Frame frame = session.update();
             Camera camera = frame.getCamera();
 
-
-
-
-
             // Handle taps. Handling only one tap per frame, as taps are usually low frequency
             // compared to frame rate.
 
@@ -462,20 +438,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // Adding an Anchor tells ARCore that it should track this position in
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
-                        anchors.add(hit.createAnchor());
-                        Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
-
-
+                            anchors.add(hit.createAnchor());
+                            Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
 
 
                         // ***** GETTING THE LATITUDE/LONGITUDE OF AN OBJECT PLACED ON THE AR PLANE *****
 
                         double radius = 6378137;
+
                         // calculate offset
                         double dn = anchors.get(anchors.size()-1).getPose().tx();
                         double de = anchors.get(anchors.size()-1).getPose().tz();
-//                        double dn = 100;
-//                        double de = 100;
 
                         // Coordinate offsets in radians
                         double dLat = dn/radius;
@@ -502,22 +475,31 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
                         String msg = "Object Latitude: " + lat0 + "\nObject Longitude: " + lon0 + "\n\nDevice Latitude: " + latitude + "\nDevice Longitude: " + longitude;
                         msg += "\nDistance from Device to Object: " + distanceInMeters + " meters";
-
-
-
-                        //Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_LONG).show();
-                        //locationText.setText(msg);\
-
+                        msg += " " + anchors.get(anchors.size()-1).getPose().toString();
 
                         Log.d(TAG, "RESULT: \n" + msg);
 
+                        
+                        // check correctness of math
 
+//                        double latDif = lat0 - latitude;
+//                        double lonDif = lon0 - longitude;
+//
+//                        double latDifRad = latDif * Math.PI/180;
+//                        double lonDifRad = lonDif * Math.PI/180;
+//
+//                        // offsets
+//                        double offN = latDifRad * radius;
+//                        double offE = lonDifRad * radius * Math.cos(Math.PI * latitude);
 
+//                        anchors.add(session.createAnchor(frame.getCamera().getDisplayOrientedPose().compose(mCameraRelativePose)));
 
+//                        Anchor sessionAnchor = session.createAnchor(frame.getCamera().getPose().compose(Pose.makeTranslation((float)offN, 0, (float)offE).extractTranslation()));
+//
+//                        Log.d(TAG, "RESULT: " + sessionAnchor.getPose().toString());
 
 
                         allObjectModes.add(mode);
-
 
                         break;
                     }
@@ -595,11 +577,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                     allObjectsShadow.get(1).draw(viewmtx, projmtx, lightIntensity);
                 }
 
-
 //        virtualObject.updateModelMatrix(anchorMatrix, scaleFactor);
 //        virtualObjectShadow.updateModelMatrix(anchorMatrix, scaleFactor);
 //        virtualObject.draw(viewmtx, projmtx, lightIntensity);
 //        virtualObjectShadow.draw(viewmtx, projmtx, lightIntensity);
+            }
+
+            // Draw a floating android locked to the camera
+            {
+                frame.getCamera().getDisplayOrientedPose().compose(mCameraRelativePose).toMatrix(anchorMatrix, 0);
+                virtualObject.updateModelMatrix(anchorMatrix, 0.5f);
+                virtualObject.draw(viewmtx, projmtx, lightIntensity);
             }
 
         } catch (Throwable t) {
