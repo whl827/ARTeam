@@ -33,6 +33,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -48,6 +49,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cocoahero.android.geojson.FeatureCollection;
+import com.cocoahero.android.geojson.GeoJSON;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
@@ -62,6 +65,7 @@ import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
+import com.google.ar.core.examples.java.helloar.parsing.GeoJsonParser;
 import com.google.ar.core.examples.java.helloar.rendering.BackgroundRenderer;
 import com.google.ar.core.examples.java.helloar.rendering.ObjectRenderer;
 import com.google.ar.core.examples.java.helloar.rendering.ObjectRenderer.BlendMode;
@@ -72,6 +76,7 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -136,7 +141,13 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private double latitude;
     private double longitude;
     private double altitude;
-    private boolean isCalibrated;
+
+    private File internal;
+    private FeatureCollection geoObject = null;
+    private GeoJSON geoJSON = null;
+    private File geoJsonFile = null;
+    private GeoJsonParser geoParsed = null;
+    private ArrayList<ArrayList<Float>> allPoints = null;
 
     private SensorManager mSensorManager;
     private Sensor accelerometer;
@@ -261,33 +272,22 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         }
         locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
 
-        //calculate azimuth
+        try {
+            internal = Environment.getExternalStorageDirectory();
+            geoJsonFile = new File(internal, "annenberg.geojson");
+            geoParsed = new GeoJsonParser(this, "annenberg.geojson");
+            Log.d(TAG, "onCreate: file success " + geoParsed.getGeoJson().getType().toString());
+            geoObject = (FeatureCollection) geoParsed.getGeoJson();
+            Log.d(TAG, "geoJson to Feature -- " + geoObject.getFeatures().get(0).getGeometry().toJSON().getString("coordiantes"));
+        } catch (Exception e) {
+
+        } finally {
+
+        }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-//        SensorEventListener sensorEventListener = new SensorEventListener() {
-//            float[] mGravity;
-//            float[] mGeomagnetic;
-//            @Override
-//            public void onSensorChanged(SensorEvent event) {
-//                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-//                    mGravity = event.values;
-//                if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-//                    mGeomagnetic = event.values;
-//                if (mGravity != null && mGeomagnetic != null) {
-//                    float R[] = new float[9];
-//                    float I[] = new float[9];
-//                    boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-//                    if (success) {
-//                        float orientationData[] = new float[3];
-//                        SensorManager.getOrientation(R, orientationData);
-//                        azimuth = orientationData[0];
-//                        Log.d(TAG, "bearing:!!!!!!!!!!!!");
-//                        // now how to use previous 3 values to calculate orientation
-//                    }
-//                }
-//            }
 //            @Override
 //            public void onAccuracyChanged(Sensor sensor, int accuracy) {
 //                // TODO Auto-generated method stub
@@ -297,9 +297,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
-
-        objectDataList = new ArrayList<ARObject>();
-
     }
 
     //Sensor Listener Function
@@ -527,6 +524,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                             || (trackable instanceof Point
                             && ((Point) trackable).getOrientationMode()
                             == OrientationMode.ESTIMATED_SURFACE_NORMAL)) {
+
                         // Hits are sorted by depth. Consider only closest hit on a plane or oriented point.
                         // Cap the number of objects created. This avoids overloading both the
                         // rendering system and ARCore.
@@ -554,6 +552,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         }
                         if(exist) { break; }
 
+                        // add an anchor at the tapped position
                         if (anchors.size() >= 20) {
                             anchors.get(0).detach();
                             anchors.remove(0);
@@ -563,29 +562,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
                         anchors.add(hit.createAnchor());
-                        ARObject object = new ARObject();
-                        if (objectDataList.size() == 0) {
-                            object.setObjName("Transformer 0");
-                            object.setObjDesc("Voltage: 240W");
-                        } else if (objectDataList.size() == 1) {
-                            object.setObjName("Transformer 1");
-                            object.setObjDesc("Voltage: 480W");
-                        } else if (objectDataList.size() == 2) {
-                            object.setObjName("Transformer 2");
-                            object.setObjDesc("Voltage: 960W");
-                        }
-                        objectDataList.add(object);
-
-//                        Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
-
-//                        Anchor rotateAnchor = anchors.get(anchors.size()-1);
-//                        Pose rotatePose = rotateAnchor.getPose();
-//                        rotatePose = rotatePose.makeRotation(0, rotatePose.qy(), 0, (float)Math.cos(90/2));
-////                        rotatePose = rotatePose.makeRotation(rotatePose.qx(), (float)Math.sin(90/2), rotatePose.qz(), rotatePose.qw());
-//                        Anchor rotateAnchor2 = session.createAnchor(rotatePose);
-//                        anchors.remove(anchors.size()-1);
-//                        anchors.add(rotateAnchor2);
-
+                        
                         allObjectModes.add(mode);
 
                         break;
@@ -636,11 +613,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             planeRenderer.drawPlanes(
                     session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
 
-            double radius = 6378137; // for calculating coordinates
-
             // create anchors not by touch (from file)
             double lat0 = 0, lon0 = 0;
-            if (isCalibrated && referenceAnchor == null && latitude != 0 && longitude != 0) {
+            if (referenceAnchor == null && latitude != 0 && longitude != 0) {
                 // get coordinates from file
                 double lat, lon;
                 lat = latitude;
@@ -648,39 +623,11 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 lat0 = 34.023315;
                 lon0 = -118.284870;
 
-                // calculate where to place the anchor
-                double latDif = lat0 - lat;
-                double lonDif = lon0 - lon;
-
-                Log.d(TAG, "TESTING : latDif: " + latDif + "lonDif: " + lonDif);
-
-                double latDifRad = latDif * Math.PI/180;
-                double lonDifRad = lonDif * Math.PI/180;
-
-                // offsets in meters
-                double offN = latDifRad * radius;
-                double offE = lonDifRad * (radius * Math.cos(Math.PI * lat / 180));
-
-                Log.d(TAG, "TESTING : " + offN + ", " + offE);
-
-                // create anchor
-                Pose mPose = Pose.makeTranslation(
-                        (float)offN + frame.getCamera().getPose().tx(),
-                        0,
-                        (float)offE + frame.getCamera().getPose().tz());
-
-//                mPose = mPose.compose(Pose.makeRotation(
-//                        0,
-//                        (float)Math.sin(90/2),
-//                        0,
-//                        (float)Math.cos(90/2)));
-
-                referenceAnchor = session.createAnchor(mPose);
-
-//                Log.d(TAG, "TESTING REFERENCE: " + mPose.toString());
-
-                anchors.add(referenceAnchor);
-                allObjectModes.add(mode);
+                referenceAnchor = session.createAnchor(getPoseFromCoordinates(frame, lat0, lon0));
+                if (referenceAnchor != null) {
+                    anchors.add(referenceAnchor);
+                    allObjectModes.add(mode);
+                }
             }
 
             // Display orientation from true north to let the user calibrate.
@@ -740,40 +687,15 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // ***** GETTING THE LATITUDE/LONGITUDE OF AN OBJECT PLACED ON THE AR PLANE *****
 
             if (anchors.size() > 0) {
-//                 calculate offset
-                double dn = anchors.get(anchors.size() - 1).getPose().tx();
-                double de = anchors.get(anchors.size() - 1).getPose().tz();
-
-                Log.d(TAG, "TESTING2: " + dn + ", " + de);
-
-                // Coordinate offsets in radians
-                double dLat = dn / radius;
-                double dLon = de / (radius * Math.cos(Math.PI * latitude / 180));
-
-                // Offset Position, decimal degrees
-                double lat00 = latitude + dLat * 180 / Math.PI;
-                double lon00 = longitude + dLon * 180 / Math.PI;
-
-                boolean bool = true;
-                if(bool){
-                    bool = false;
-                    Log.d(TAG, "ANCHOR! OBJECT LOC: Lat: " + lat00 + " Lon: " + lon00);
-                    Log.d(TAG, "ANCHOR! DEVICE LOC: Lat: " + latitude + " Lon: " + longitude);
-                }
-
-
-
                 Location loc1 = new Location("");
                 loc1.setLatitude(latitude);
                 loc1.setLongitude(longitude);
 
-                Location loc2 = new Location("");
-                loc2.setLatitude(lat00);
-                loc2.setLongitude(lon00);
+                Location loc2 = getCoordinatesFromPose(anchors.get(anchors.size() - 1).getPose());
 
                 float distanceInMeters = loc1.distanceTo(loc2);
 
-                String msg = "Object Latitude: " + lat00 + "\nObject Longitude: " + lon00;
+                String msg = "Object Latitude: " + loc1.getLatitude() + "\nObject Longitude: " + loc1.getLongitude();
                 msg += "\n\nDistance from Device to Object: " + distanceInMeters + " meters";
 
                 locationText.setText(msg);
@@ -781,6 +703,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 Log.d(TAG, "TESTING : ANCHOR SIZE: " + anchors.size());
 
                 Log.d(TAG, "RESULT: \n" + distanceInMeters);
+
             }
 
         } catch (Throwable t) {
@@ -815,6 +738,69 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                     });
         }
         messageSnackbar.show();
+    }
+
+    private Location getCoordinatesFromPose(Pose pose) {
+        double dn, de, dLat, dLon, lat0, lon0;
+        double radius = 6378137; // for calculating coordinates    
+        Location loc;
+
+        // calculate offset
+        dn = pose.tx();
+        de = pose.tz();
+
+        Log.d(TAG, "TESTING2: " + dn + ", " + de);
+
+        // Coordinate offsets in radians
+        dLat = dn / radius;
+        dLon = de / (radius * Math.cos(Math.PI * latitude / 180));
+
+        // Offset Position, decimal degrees
+        lat0 = latitude + dLat * 180 / Math.PI;
+        lon0 = longitude + dLon * 180 / Math.PI;
+
+        Log.d(TAG, "ANCHOR HIT POSE: Lat: " + lat0 + " Lon: " + lon0);
+
+        loc = new Location("");
+        loc.setLatitude(lat0);
+        loc.setLongitude(lon0);
+
+        return loc;
+    }
+
+    private Pose getPoseFromCoordinates(Frame frame, double lat0, double lon0) {
+        double latDif, lonDif, latDifRad, lonDifRad, offN, offE;
+        double radius = 6378137; // for calculating coordinates
+        Pose mPose;
+
+        if (latitude == 0 || longitude == 0) return null;
+
+        // calculate where to place the anchor
+        latDif = lat0 - latitude;
+        lonDif = lon0 - longitude;
+
+        Log.d(TAG, "TESTING : latDif: " + latDif + "lonDif: " + lonDif);
+
+        latDifRad = latDif * Math.PI/180;
+        lonDifRad = lonDif * Math.PI/180;
+
+        // offsets in meters
+        offN = latDifRad * radius;
+        offE = lonDifRad * (radius * Math.cos(Math.PI * latitude / 180));
+
+        Log.d(TAG, "TESTING : " + offN + ", " + offE);
+
+        // create anchor
+        mPose = Pose.makeTranslation(
+                (float)offN + frame.getCamera().getPose().tx(),
+                0,
+                (float)offE + frame.getCamera().getPose().tz());
+
+        // TODO re-orient anchor wrt true north
+
+        Log.d(TAG, "TESTING REFERENCHE: " + mPose.toString());
+
+        return mPose;
     }
 
     private void showLoadingMessage() {

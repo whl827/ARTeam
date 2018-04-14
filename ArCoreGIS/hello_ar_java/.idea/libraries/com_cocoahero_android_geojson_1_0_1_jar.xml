@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="com.cocoahero.android:geojson:1.0.1@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cocoahero.android/geojson/1.0.1/5ac9c72666b11d5817e8c3c1145e0b020725e7de/geojson-1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cocoahero.android/geojson/1.0.1/b3fc6ea16b77b4266a474415ca062af0bdd21a5a/geojson-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
