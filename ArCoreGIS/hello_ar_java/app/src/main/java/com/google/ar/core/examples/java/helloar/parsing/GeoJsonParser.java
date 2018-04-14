@@ -61,6 +61,7 @@ public class GeoJsonParser
         } finally {
             try {
                 geoJson = GeoJSON.parse(wholeLine);
+                Log.d(TAG, "tagme" + geoJson.toString());
                 if (reader != null) {
                     reader.close();
                 }
