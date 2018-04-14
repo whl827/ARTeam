@@ -20,13 +20,20 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.GeomagneticField;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
@@ -66,11 +73,13 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
 
 import java.lang.Object;
 
@@ -79,7 +88,7 @@ import java.lang.Object;
  * ARCore API. The application will display any detected planes and will allow the user to tap on a
  * plane to place a 3d model of the Android robot.
  */
-public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.Renderer {
+public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.Renderer, SensorEventListener {
     private static final String TAG = HelloArActivity.class.getSimpleName();
 
     // Rendering. The Renderers are created here, and initialized when the GL surface is created.
@@ -123,9 +132,25 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private TextView deviceLocationText;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Location currentLocation;
     private double latitude;
     private double longitude;
-    private boolean anchorCreated;
+    private double altitude;
+    private boolean isCalibrated;
+
+    private SensorManager mSensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private float bearing;
+    private float azimuth;
+    private float direction;
+    private float declination;
+
+    float[] mGravity = null;
+    float[] mGeomagnetic = null;
+
+    public static final String EXTRA_MESSAGE = "com.helloar.edward.han.MESSAGE";
+    private ArrayList<ARObject> objectDataList;
 
     // added on 4/4/18
     //private final Pose mCameraRelativePose = Pose.makeTranslation(0.01f, -0.01f, -0.6f);
@@ -136,8 +161,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         setContentView(R.layout.activity_main);
         surfaceView = findViewById(R.id.surfaceview);
         displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
-
-        anchorCreated = false;
 
         // Set up tap listener.
         gestureDetector =
@@ -184,18 +207,25 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         locationText = findViewById(R.id.locationText);
         deviceLocationText = findViewById(R.id.deviceLocationText);
 
+        currentLocation = new Location("");
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                double altitude = location.getAltitude();
+                altitude = location.getAltitude();
                 String msg = "Latitude: " + latitude + "\n" +
                              "Longitude: " + longitude + "\n" +
-                             "Altitude: " + altitude;
+                             "Altitude: " + altitude + "\n" +
+                             "Bearing: " + bearing + "\n" +
+                             "Azimuth w/o dec: " + azimuth + "\n" +
+                             "Declination: " + declination + "\n" +
+                             "Direction (degrees): " + direction;
                 deviceLocationText.setText(msg);
-
+                currentLocation.setLatitude(latitude);
+                currentLocation.setLongitude(longitude);
             }
 
             @Override
@@ -230,7 +260,74 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             return;
         }
         locationManager.requestLocationUpdates("gps", 1, 0, locationListener);
+
+        //calculate azimuth
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+//        SensorEventListener sensorEventListener = new SensorEventListener() {
+//            float[] mGravity;
+//            float[] mGeomagnetic;
+//            @Override
+//            public void onSensorChanged(SensorEvent event) {
+//                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+//                    mGravity = event.values;
+//                if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+//                    mGeomagnetic = event.values;
+//                if (mGravity != null && mGeomagnetic != null) {
+//                    float R[] = new float[9];
+//                    float I[] = new float[9];
+//                    boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+//                    if (success) {
+//                        float orientationData[] = new float[3];
+//                        SensorManager.getOrientation(R, orientationData);
+//                        azimuth = orientationData[0];
+//                        Log.d(TAG, "bearing:!!!!!!!!!!!!");
+//                        // now how to use previous 3 values to calculate orientation
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//        };
+
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+
+        objectDataList = new ArrayList<ARObject>();
+
     }
+
+    //Sensor Listener Function
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            mGravity = event.values;
+            Log.d(TAG, "bearing:! sensor type: accelerometer");
+        }
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+            mGeomagnetic = event.values;
+            Log.d(TAG, "bearing:! On sensor type is magnetic field");
+        }
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                float orientationData[] = new float[3];
+                SensorManager.getOrientation(R, orientationData);
+                azimuth = orientationData[0];
+                // now how to use previous 3 values to calculate orientation
+            }
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     @Override
     protected void onResume() {
@@ -451,6 +548,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                                     (Math.abs(cur_tz - temp_tz) < 0.099)) {
                                 Log.d(TAG, "!OBJECT EXISTS");
                                 exist = true;
+
+                                displayInfo();
                             }
                         }
                         if(exist) { break; }
@@ -464,7 +563,29 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
                         anchors.add(hit.createAnchor());
-                        Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
+                        ARObject object = new ARObject();
+                        if (objectDataList.size() == 0) {
+                            object.setObjName("Transformer 0");
+                            object.setObjDesc("Voltage: 240W");
+                        } else if (objectDataList.size() == 1) {
+                            object.setObjName("Transformer 1");
+                            object.setObjDesc("Voltage: 480W");
+                        } else if (objectDataList.size() == 2) {
+                            object.setObjName("Transformer 2");
+                            object.setObjDesc("Voltage: 960W");
+                        }
+                        objectDataList.add(object);
+
+//                        Log.d(TAG, "ANCHOR HIT POSE: " + anchors.get(anchors.size()-1).getPose().toString());
+
+//                        Anchor rotateAnchor = anchors.get(anchors.size()-1);
+//                        Pose rotatePose = rotateAnchor.getPose();
+//                        rotatePose = rotatePose.makeRotation(0, rotatePose.qy(), 0, (float)Math.cos(90/2));
+////                        rotatePose = rotatePose.makeRotation(rotatePose.qx(), (float)Math.sin(90/2), rotatePose.qz(), rotatePose.qw());
+//                        Anchor rotateAnchor2 = session.createAnchor(rotatePose);
+//                        anchors.remove(anchors.size()-1);
+//                        anchors.add(rotateAnchor2);
+
                         allObjectModes.add(mode);
 
                         break;
@@ -518,15 +639,18 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             double radius = 6378137; // for calculating coordinates
 
             // create anchors not by touch (from file)
-            if (referenceAnchor == null && latitude != 0 && longitude != 0) {
+            double lat0 = 0, lon0 = 0;
+            if (isCalibrated && referenceAnchor == null && latitude != 0 && longitude != 0) {
                 // get coordinates from file
-                double lat0, lon0;
-                lat0 = 34.02320842;
-                lon0 = -118.28481203;
+                double lat, lon;
+                lat = latitude;
+                lon = longitude;
+                lat0 = 34.023315;
+                lon0 = -118.284870;
 
                 // calculate where to place the anchor
-                double latDif = lat0 - latitude;
-                double lonDif = lon0 - longitude;
+                double latDif = lat0 - lat;
+                double lonDif = lon0 - lon;
 
                 Log.d(TAG, "TESTING : latDif: " + latDif + "lonDif: " + lonDif);
 
@@ -535,7 +659,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
                 // offsets in meters
                 double offN = latDifRad * radius;
-                double offE = lonDifRad * (radius * Math.cos(Math.PI * latitude / 180));
+                double offE = lonDifRad * (radius * Math.cos(Math.PI * lat / 180));
 
                 Log.d(TAG, "TESTING : " + offN + ", " + offE);
 
@@ -545,13 +669,43 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         0,
                         (float)offE + frame.getCamera().getPose().tz());
 
+//                mPose = mPose.compose(Pose.makeRotation(
+//                        0,
+//                        (float)Math.sin(90/2),
+//                        0,
+//                        (float)Math.cos(90/2)));
+
                 referenceAnchor = session.createAnchor(mPose);
 
-                Log.d(TAG, "TESTING REFERENCHE: " + mPose.toString());
+//                Log.d(TAG, "TESTING REFERENCE: " + mPose.toString());
 
                 anchors.add(referenceAnchor);
                 allObjectModes.add(mode);
             }
+
+            // Display orientation from true north to let the user calibrate.
+            // convert radians to degrees
+            azimuth = (float)Math.toDegrees(azimuth);
+            GeomagneticField geoField = new GeomagneticField(
+                    (float) latitude,
+                    (float) longitude,
+                    (float) altitude,
+                    System.currentTimeMillis());
+            //azimuth += geoField.getDeclination(); // converts magnetic north to true north
+            declination = geoField.getDeclination(); // the difference angle of magnetic north from true north
+//            if(azimuth < 0){
+//                azimuth += 360;
+//            }
+
+            Location targetLoc = new Location("");
+            targetLoc.setLatitude(lat0);
+            targetLoc.setLongitude(lon0);
+
+            bearing = currentLocation.bearingTo(targetLoc); // (it's already in degrees)
+
+            Log.d(TAG, "bearing: " + bearing + "azimuth: " + azimuth);
+
+            direction = azimuth - bearing;
 
             // Visualize anchors.
             float scaleFactor = 1.0f;
@@ -562,6 +716,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 // Get the current pose of an Anchor in world space. The Anchor pose is updated
                 // during calls to session.update() as ARCore refines its estimate of the world.
                 anchors.get(k).getPose().toMatrix(anchorMatrix, 0);
+
+//                Matrix.rotateM(anchorMatrix, 0, 90, 0f, 1f, 0f);
 
 //                anchorMatrix[13] = anchorMatrix[13]-(0.5f);
 
@@ -584,7 +740,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             // ***** GETTING THE LATITUDE/LONGITUDE OF AN OBJECT PLACED ON THE AR PLANE *****
 
             if (anchors.size() > 0) {
-                // calculate offset
+//                 calculate offset
                 double dn = anchors.get(anchors.size() - 1).getPose().tx();
                 double de = anchors.get(anchors.size() - 1).getPose().tz();
 
@@ -595,22 +751,29 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 double dLon = de / (radius * Math.cos(Math.PI * latitude / 180));
 
                 // Offset Position, decimal degrees
-                double lat0 = latitude + dLat * 180 / Math.PI;
-                double lon0 = longitude + dLon * 180 / Math.PI;
+                double lat00 = latitude + dLat * 180 / Math.PI;
+                double lon00 = longitude + dLon * 180 / Math.PI;
 
-                Log.d(TAG, "ANCHOR HIT POSE: Lat: " + lat0 + " Lon: " + lon0);
+                boolean bool = true;
+                if(bool){
+                    bool = false;
+                    Log.d(TAG, "ANCHOR! OBJECT LOC: Lat: " + lat00 + " Lon: " + lon00);
+                    Log.d(TAG, "ANCHOR! DEVICE LOC: Lat: " + latitude + " Lon: " + longitude);
+                }
+
+
 
                 Location loc1 = new Location("");
                 loc1.setLatitude(latitude);
                 loc1.setLongitude(longitude);
 
                 Location loc2 = new Location("");
-                loc2.setLatitude(lat0);
-                loc2.setLongitude(lon0);
+                loc2.setLatitude(lat00);
+                loc2.setLongitude(lon00);
 
                 float distanceInMeters = loc1.distanceTo(loc2);
 
-                String msg = "Object Latitude: " + lat0 + "\nObject Longitude: " + lon0;
+                String msg = "Object Latitude: " + lat00 + "\nObject Longitude: " + lon00;
                 msg += "\n\nDistance from Device to Object: " + distanceInMeters + " meters";
 
                 locationText.setText(msg);
@@ -660,6 +823,28 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                     @Override
                     public void run() {
                         showSnackbarMessage("Searching for surfaces...", false);
+
+                    }
+                });
+    }
+
+    private void displayInfo() {
+        runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(HelloArActivity.this, InfoActivity.class);
+                        String message = "testing launch";
+                        intent.putExtra(EXTRA_MESSAGE, message);
+                        if (objectDataList.size() == 1) {
+                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(0));
+                        } else if (objectDataList.size() == 2) {
+                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(1));
+                        } else if (objectDataList.size() == 3) {
+                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(2));
+                        }
+                        startActivityForResult(intent,1);
+                        Toast.makeText(HelloArActivity.this, "testing toast", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -690,4 +875,5 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private int getMode() {
         return mode;
     }
+
 }
