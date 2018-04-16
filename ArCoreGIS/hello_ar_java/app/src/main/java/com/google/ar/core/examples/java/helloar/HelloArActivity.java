@@ -99,6 +99,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     // Rendering. The Renderers are created here, and initialized when the GL surface is created.
     private GLSurfaceView surfaceView;
 
+    private float scaleFactor;
+
     private boolean installRequested;
 
     private Session session;
@@ -112,6 +114,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
     private final ObjectRenderer pipeObject = new ObjectRenderer();
     private final ObjectRenderer pipObjectShadow = new ObjectRenderer();
+
+    private final ObjectRenderer substationObject = new ObjectRenderer();
+    private final ObjectRenderer substationObjectShadow = new ObjectRenderer();
 
     // Have multiple Objects
     private ArrayList<ObjectRenderer> allObjects = new ArrayList<>();
@@ -138,8 +143,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     private LocationManager locationManager;
     private LocationListener locationListener;
     private Location currentLocation;
-    private double latitude;
-    private double longitude;
+    private double latitude = 0;
+    private double longitude = 0;
     private double altitude;
 
     private File internal;
@@ -161,7 +166,34 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     float[] mGeomagnetic = null;
 
     public static final String EXTRA_MESSAGE = "com.helloar.edward.han.MESSAGE";
-    private ArrayList<ARObject> objectDataList;
+
+    private static final String substationStr = "Electric Substation Info\n" +
+            "\n" +
+            "ELP_ID: 3\n" +
+            "ELP_Code 7110\n" +
+            "DXF_LAYER: SUBSTATION\n" +
+            "DESC: Substation\n" +
+            "Shape_Length: 113.03085722\n" +
+            "Shape_Area: 157.48189998734222\n";
+    private static final String pipeStr = "Replacement Instruction:\n" +
+            "\n" +
+            "Pressure: 0.6 BAR\n" +
+            "Temperature: 59 Celsius\n" +
+            "Flow: STRATIFIED\n" +
+            "Last Check: 16/05/2017\n" +
+            "\n" +
+            "1. Locate Pipe\n" +
+            "2. Locate Valve\n" +
+            "3. Close the valve by turning it clockwise\n" +
+            "4. Locate Bleed Valve\n" +
+            "5. Empty the pipe by opening the bleed valve\n" +
+            "6. Locate the pressure indicating transmitter\n" +
+            "7. Remove the malfunction instrument\n" +
+            "8. Put the new instrument in place\n" +
+            "9. Close the bleed valve\n" +
+            "10. Reopen the valve";
+
+    private ArrayList<String> infoArray;
 
     // added on 4/4/18
     //private final Pose mCameraRelativePose = Pose.makeTranslation(0.01f, -0.01f, -0.6f);
@@ -205,6 +237,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         surfaceView.setRenderer(this);
         surfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+        //instantiate allpoints
+        allPoints = new ArrayList<ArrayList<Float>>();
+
         installRequested = false;
 
         button = findViewById(R.id.button1);
@@ -228,12 +263,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 longitude = location.getLongitude();
                 altitude = location.getAltitude();
                 String msg = "Latitude: " + latitude + "\n" +
-                             "Longitude: " + longitude + "\n" +
-                             "Altitude: " + altitude + "\n" +
-                             "Bearing: " + bearing + "\n" +
-                             "Azimuth w/o dec: " + azimuth + "\n" +
-                             "Declination: " + declination + "\n" +
-                             "Direction (degrees): " + direction;
+                             "Longitude: " + longitude;
                 deviceLocationText.setText(msg);
                 currentLocation.setLatitude(latitude);
                 currentLocation.setLongitude(longitude);
@@ -282,7 +312,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         } catch (Exception e) {
 
         } finally {
-
+            allPoints = geoParsed.getCoordinates(0);
         }
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -452,7 +482,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         // Prepare the other rendering objects.
         try {
-            virtualObject.createOnGlThread(/*context=*/ this, "andy.obj", "andy.png");
+            virtualObject.createOnGlThread(/*context=*/ this, "SubstationBig.obj", "SubstationBig.png");
             virtualObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
 
             virtualObjectShadow.createOnGlThread(/*context=*/ this, "andy_shadow.obj", "andy_shadow.png");
@@ -472,6 +502,17 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
             allObjects.add(pipeObject);
             allObjectsShadow.add(pipObjectShadow);
+
+//            //substation
+//            substationObject.createOnGlThread(/*context=*/ this, "SubstationBig.obj", "SubstationBig.png");
+//            substationObject.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
+//
+//            substationObjectShadow.createOnGlThread(/*context=*/ this, "andy_shadow.obj", "andy_shadow.png");
+//            substationObjectShadow.setBlendMode(BlendMode.Shadow);
+//            substationObjectShadow.setMaterialProperties(1.0f, 0.0f, 0.0f, 1.0f);
+//
+//            allObjects.add(substationObject);
+//            allObjectsShadow.add(substationObjectShadow);
 
         } catch (IOException e) {
             Log.e(TAG, "Failed to read obj file");
@@ -517,6 +558,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             MotionEvent tap = queuedSingleTaps.poll();
             if (tap != null && camera.getTrackingState() == TrackingState.TRACKING) {
                 for (HitResult hit : frame.hitTest(tap)) {
+
                     // Check if any plane was hit, and if it was hit inside the plane polygon
                     Trackable trackable = hit.getTrackable();
                     // Creates an anchor if a plane or an oriented point was hit.
@@ -529,25 +571,32 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // Cap the number of objects created. This avoids overloading both the
                         // rendering system and ARCore.
 
-                        //check if object exists
+                        //check if object exists on screen
                         double cur_tx = hit.getHitPose().tx();
                         double cur_ty = hit.getHitPose().ty();
                         double cur_tz = hit.getHitPose().tz();
                         boolean exist = false;
-                        for(Anchor anc: anchors)
+                        for(int i=0; i<anchors.size(); i++)
                         {
+
+                            Anchor anc = anchors.get(i);
+
                             double temp_tx = Math.round(anc.getPose().tx() * 1000.0) / 1000.0;
                             double temp_ty = Math.round(anc.getPose().ty() * 1000.0) / 1000.0;
                             double temp_tz = Math.round(anc.getPose().tz() * 1000.0) / 1000.0;
 
-                            // 0.09 <= value <= 1.0 ; bigger values make "hit-frame" bigger
-                            if( (Math.abs(cur_tx - temp_tx) < 0.099) &&
-                                    (Math.abs(cur_ty - temp_ty) < 0.099) &&
-                                    (Math.abs(cur_tz - temp_tz) < 0.099)) {
-                                Log.d(TAG, "!OBJECT EXISTS");
-                                exist = true;
+                            //TODO: change comparison value
 
-                                displayInfo();
+                            Log.d(TAG, "!CHECK: OBJECT POSE: " + temp_ty + ", " + temp_tz + "\n");
+                            Log.d(TAG, "!CHECK: TAPPED POSE: " + cur_ty + ", " + cur_tz + "\n");
+
+                            // 0.09 <= value <= 1.0 ; bigger values make "hit-frame" bigger
+                            if( (Math.abs(cur_tx - temp_tx) < 0.25) &&
+                            (Math.abs(cur_ty - temp_ty) < 0.25) &&
+                                    (Math.abs(cur_tz - temp_tz) < 0.25)) {
+                                Log.d(TAG, "!CHECK: OBJECT EXISTS");
+                                exist = true;
+                                displayInfo(i);
                             }
                         }
                         if(exist) { break; }
@@ -562,7 +611,6 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                         // space. This anchor is created on the Plane to place the 3D model
                         // in the correct position relative both to the world and to the plane.
                         anchors.add(hit.createAnchor());
-                        
                         allObjectModes.add(mode);
 
                         break;
@@ -614,20 +662,21 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                     session.getAllTrackables(Plane.class), camera.getDisplayOrientedPose(), projmtx);
 
             // create anchors not by touch (from file)
-            double lat0 = 0, lon0 = 0;
+            double lat0 = 0, lon0 = 0, altitude = 0;
             if (referenceAnchor == null && latitude != 0 && longitude != 0) {
                 // get coordinates from file
-                double lat, lon;
-                lat = latitude;
-                lon = longitude;
-                lat0 = 34.023315;
-                lon0 = -118.284870;
+                lat0 = allPoints.get(0).get(1); //geojson long/lat
+                lon0 = allPoints.get(0).get(0);
 
-                referenceAnchor = session.createAnchor(getPoseFromCoordinates(frame, lat0, lon0));
-                if (referenceAnchor != null) {
-                    anchors.add(referenceAnchor);
-                    allObjectModes.add(mode);
-                }
+                Log.d(TAG, "!!!LAT: " + lat0 + "LONG: " +lon0);
+
+                referenceAnchor = session.createAnchor(getPoseFromCoordinates(frame, lat0, lon0, altitude));
+
+                //placing predefined object
+//                if (referenceAnchor != null) {
+//                    anchors.add(referenceAnchor);
+//                    allObjectModes.add(mode);
+//                }
             }
 
             // Display orientation from true north to let the user calibrate.
@@ -655,7 +704,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             direction = azimuth - bearing;
 
             // Visualize anchors.
-            float scaleFactor = 1.0f;
+            scaleFactor = 1.0f;
             for (int k = 0; k < anchors.size(); k++) {
                 if (anchors.get(k).getTrackingState() != TrackingState.TRACKING) {
                     continue;
@@ -669,14 +718,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 //                anchorMatrix[13] = anchorMatrix[13]-(0.5f);
 
                 // Update and draw the model and its shadow.
-                if (allObjectModes.get(k).intValue() == 1) {
-                    scaleFactor = 0.01f;
+                if (allObjectModes.get(k).intValue() == 1) { //pipe
+                    scaleFactor = 0.0125f;
                     allObjects.get(1).updateModelMatrix(anchorMatrix, scaleFactor);
                     allObjectsShadow.get(1).updateModelMatrix(anchorMatrix, scaleFactor);
                     allObjects.get(1).draw(viewmtx, projmtx, lightIntensity);
                     allObjectsShadow.get(1).draw(viewmtx, projmtx, lightIntensity);
                 } else {
-                    scaleFactor = 1.0f;
+                    scaleFactor = 0.125f; //substation
                     allObjects.get(0).updateModelMatrix(anchorMatrix, scaleFactor);
                     allObjectsShadow.get(0).updateModelMatrix(anchorMatrix, scaleFactor);
                     allObjects.get(0).draw(viewmtx, projmtx, lightIntensity);
@@ -694,6 +743,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 Location loc2 = getCoordinatesFromPose(anchors.get(anchors.size() - 1).getPose());
 
                 float distanceInMeters = loc1.distanceTo(loc2);
+
+//                distanceInMeters -= 1;
 
                 String msg = "Object Latitude: " + loc1.getLatitude() + "\nObject Longitude: " + loc1.getLongitude();
                 msg += "\n\nDistance from Device to Object: " + distanceInMeters + " meters";
@@ -768,7 +819,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         return loc;
     }
 
-    private Pose getPoseFromCoordinates(Frame frame, double lat0, double lon0) {
+    private Pose getPoseFromCoordinates(Frame frame, double lat0, double lon0, double altitude) {
         double latDif, lonDif, latDifRad, lonDifRad, offN, offE;
         double radius = 6378137; // for calculating coordinates
         Pose mPose;
@@ -793,7 +844,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
         // create anchor
         mPose = Pose.makeTranslation(
                 (float)offN + frame.getCamera().getPose().tx(),
-                0,
+                (float)altitude,
                 (float)offE + frame.getCamera().getPose().tz());
 
         // TODO re-orient anchor wrt true north
@@ -814,21 +865,34 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
                 });
     }
 
-    private void displayInfo() {
+    private void displayInfo(int i) {
+
+        final int info_index=  i;
         runOnUiThread(
                 new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent(HelloArActivity.this, InfoActivity.class);
-                        String message = "testing launch";
-                        intent.putExtra(EXTRA_MESSAGE, message);
-                        if (objectDataList.size() == 1) {
-                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(0));
-                        } else if (objectDataList.size() == 2) {
-                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(1));
-                        } else if (objectDataList.size() == 3) {
-                            intent.putExtra("Object Msg", (Serializable) objectDataList.get(2));
+                        String message = null;
+                        if(info_index >= allObjectModes.size())
+                        {
+                            message = "NO INFO AVAILABLE";
+                            Log.d(TAG, "!@ size: " + allObjectModes.size() + " Index: " + info_index);
+                            Log.d(TAG, "!@ anchor size: " + anchors.size());
                         }
+                        else
+                        {
+                            switch(allObjectModes.get(info_index)) {
+                                case 0:
+                                    message = substationStr;
+                                    break;
+                                case 1:
+                                    message = pipeStr;
+                                    break;
+                            }
+                        }
+
+                        intent.putExtra(EXTRA_MESSAGE, message);
                         startActivityForResult(intent,1);
                         Toast.makeText(HelloArActivity.this, "testing toast", Toast.LENGTH_LONG).show();
                     }
@@ -853,7 +917,7 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
             button.setText("Pipe");
             mode = 1;
         } else {
-            button.setText("Andy");
+            button.setText("Substation");
             mode = 0;
         }
     }

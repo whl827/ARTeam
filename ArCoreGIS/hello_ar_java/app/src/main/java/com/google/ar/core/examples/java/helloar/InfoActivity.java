@@ -15,12 +15,16 @@ import java.io.Serializable;
 
 //<!--android:theme="@style/Theme.AppCompat.Light.NoActionBar">-->
 
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends AppCompatActivity{
+
+    private TextView infoText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+        infoText = findViewById(R.id.infoID);
 
         String TAG = "MSG";
         ActionBar actionBar = getSupportActionBar();
@@ -30,12 +34,9 @@ public class InfoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(HelloArActivity.EXTRA_MESSAGE);
-        ARObject object = (ARObject)intent.getSerializableExtra("Object Msg");
+        infoText.setText(message);
 
-        TextView objectDataView = findViewById(R.id.infoID);
-        objectDataView.append(object.getObjName() + "\n" + object.getObjDesc());
-
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+       // Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
     }
 
     @Override

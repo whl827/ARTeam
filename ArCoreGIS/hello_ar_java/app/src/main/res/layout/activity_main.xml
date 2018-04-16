@@ -33,30 +33,34 @@
       android:layout_alignParentBottom="true"
       android:layout_marginStart="23dp"
       android:layout_marginBottom="22dp"
-      android:text="Andy" />
+      android:text="Substation" />
 
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="150dp"
-      android:layout_marginStart="24dp"
-      android:layout_marginEnd="24dp"
-      android:layout_marginTop="24dp"
-      android:layout_centerHorizontal="true"
-      android:id="@+id/deviceLocationText"
-      android:textSize="9pt"
-      android:layout_alignParentTop="true"
-      android:textColor="#ff0000"/>
+    <TextView
+        android:id="@+id/deviceLocationText"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:textColor="#ffffff"
+        android:fontFamily="monospace"
+        android:textStyle="bold"
+        android:textSize="9pt" />
 
-  <TextView
-      android:id="@+id/locationText"
-      android:layout_width="match_parent"
-      android:layout_height="150dp"
-      android:layout_marginTop="4dp"
-      android:layout_alignStart="@id/deviceLocationText"
-      android:layout_below="@id/deviceLocationText"
-      android:layout_alignEnd="@id/deviceLocationText"
-      android:textSize="9pt"
-      android:textColor="#ff0000"/>
+    <TextView
+        android:id="@+id/locationText"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignEnd="@id/deviceLocationText"
+        android:layout_alignStart="@id/deviceLocationText"
+        android:layout_below="@id/deviceLocationText"
+        android:layout_marginTop="4dp"
+        android:fontFamily="monospace"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:textSize="9pt" />
 
 
 
