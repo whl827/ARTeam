@@ -137,6 +137,9 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
     // For switching between two objects
     private int mode = 0;
 
+    //counter for creating predefined objects;
+    int createdCounter = 0;
+
     private Button button;
     private TextView locationText;
     private TextView deviceLocationText;
@@ -304,8 +307,8 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
         try {
             internal = Environment.getExternalStorageDirectory();
-            geoJsonFile = new File(internal, "annenberg.geojson");
-            geoParsed = new GeoJsonParser(this, "annenberg.geojson");
+            geoJsonFile = new File(internal, "michelson.geojson");
+            geoParsed = new GeoJsonParser(this, "michelson.geojson");
             Log.d(TAG, "onCreate: file success " + geoParsed.getGeoJson().getType().toString());
             geoObject = (FeatureCollection) geoParsed.getGeoJson();
             Log.d(TAG, "geoJson to Feature -- " + geoObject.getFeatures().get(0).getGeometry().toJSON().getString("coordiantes"));
@@ -663,21 +666,39 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
             // create anchors not by touch (from file)
             double lat0 = 0, lon0 = 0, altitude = 0;
-            if (referenceAnchor == null && latitude != 0 && longitude != 0) {
-                // get coordinates from file
-                lat0 = allPoints.get(0).get(1); //geojson long/lat
-                lon0 = allPoints.get(0).get(0);
-
-                Log.d(TAG, "!!!LAT: " + lat0 + "LONG: " +lon0);
-
-                referenceAnchor = session.createAnchor(getPoseFromCoordinates(frame, lat0, lon0, altitude));
-
-                //placing predefined object
+//            if (referenceAnchor == null && latitude != 0 && longitude != 0) {
+//                // get coordinates from file
+//                lat0 = allPoints.get(0).get(1); //geojson long/lat
+//                lon0 = allPoints.get(0).get(0);
+//
+//                Log.d(TAG, "!!!LAT: " + lat0 + "LONG: " +lon0);
+//
+//                referenceAnchor = session.createAnchor(getPoseFromCoordinates(frame, lat0, lon0, altitude));
+//
+//                //placing predefined object
 //                if (referenceAnchor != null) {
 //                    anchors.add(referenceAnchor);
 //                    allObjectModes.add(mode);
 //                }
+//            }
+
+            if(createdCounter < allPoints.size() && latitude != 0 && longitude != 0)
+            {
+                for(int index=0; index<allPoints.size(); index++)
+                {
+                    Anchor current_anchor;
+                    double cur_lat = allPoints.get(index).get(1);
+                    double cur_lon = allPoints.get(index).get(0);
+                    current_anchor = session.createAnchor(getPoseFromCoordinates(frame, cur_lat, cur_lon, altitude-1));
+                    if (current_anchor != null)
+                    {
+                        anchors.add(current_anchor);
+                        allObjectModes.add(mode); //change mode
+                        createdCounter++;
+                    }
+                }
             }
+            Log.d(TAG, "ANCHOR SIZE: " + anchors.size());
 
             // Display orientation from true north to let the user calibrate.
             // convert radians to degrees
@@ -744,12 +765,14 @@ public class HelloArActivity extends AppCompatActivity implements GLSurfaceView.
 
                 float distanceInMeters = loc1.distanceTo(loc2);
 
-//                distanceInMeters -= 1;
+                // Commented below to show functionality for pre-defined/loaded objects
+                // Uncomment below, and comment code about reference anchors above (lines 685-700)
+                //      to show object placement functionality
 
-                String msg = "Object Latitude: " + loc1.getLatitude() + "\nObject Longitude: " + loc1.getLongitude();
-                msg += "\n\nDistance from Device to Object: " + distanceInMeters + " meters";
+//                String msg = "Object Latitude: " + loc1.getLatitude() + "\nObject Longitude: " + loc1.getLongitude();
+//                msg += "\n\nDistance from Device to Object: " + distanceInMeters + " meters";
 
-                locationText.setText(msg);
+//                locationText.setText(msg);
 
                 Log.d(TAG, "TESTING : ANCHOR SIZE: " + anchors.size());
 
