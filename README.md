@@ -8,4 +8,4 @@ Woonghee (Brian) Lee, &
 Sally Wei
 
 
-The majority of development done in AR can be found in the ARCGIS folder.
+The majority of development done in AR can be found in the ARCoreGIS folder.
