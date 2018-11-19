@@ -11,6 +11,7 @@ Sally Wei
 The majority of development done in AR can be found in the ARCoreGIS folder.
 &nbsp;
 
+
 ## Video Demo
 https://www.youtube.com/watch?v=pVtT7PD4RWE&feature=youtu.be
 &nbsp;
@@ -30,7 +31,7 @@ https://www.youtube.com/watch?v=pVtT7PD4RWE&feature=youtu.be
 ![alt text](https://github.com/whl827/ARTeam/blob/master/pictures/planedetection2.PNG)
 &nbsp;
 
-## Object Placement and Displaying Information on Click
+## Object Placement and Displaying Information
 &nbsp;
 
 ![alt text](https://github.com/whl827/ARTeam/blob/master/pictures/objectplacement.PNG)
